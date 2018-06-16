@@ -1,11 +1,11 @@
-#-*- coding:utf-8 -*-
+﻿#-*- coding:utf-8 -*-
 from PIL import Image,ImageDraw,ImageFont
 
 def pic2Text(_file,_text):
 	img = Image.open(_file).convert("RGBA")
-	w = 100 #宽度固定
+	w = 80 #宽度固定
 	h = int((float(img.size[1])/float(img.size[0]))*w) #高度按比例得出
-	fontSize = 20 #输出字体大小
+	fontSize = 25 #输出字体大小
 	img.thumbnail((w,h)) #获取缩略图
 	src = img.convert('L') #转换成灰度图
 	minGrey = 255 #最小灰度
@@ -30,9 +30,10 @@ def pic2Text(_file,_text):
 			index = int((greyMap[i][j] - minGrey)//greyStep) #计算出改点使用哪个字符
 			if index >= len(_text):
 				index = len(_text) - 1  #注意结尾最大灰度值，防止越界
-			draw.text((i*fontSize,j*fontSize),unicode(_text[index],'UTF-8'), fill=img.getpixel((i,j)), font=ft) #汉字编码
-	output.save(_file.split('.')[0] + '_text.jpg','JPEG')
+			draw.text((i*fontSize,j*fontSize),_text[index], fill=img.getpixel((i,j)), font=ft) #汉字编码
+	output.save(_file.split('.')[0] + '_text.jpg','PNG')
 
 if __name__ == '__main__':
-	textList = ['骤','撒','啊','哈','王','一']
-	pic2Text('test.jpg',textList)
+	#textList = ['樊','启','迪','来','玩','逆','水','寒']
+	textList = ['0','1']
+	pic2Text('jie.jpg',textList)
