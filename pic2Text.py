@@ -1,8 +1,10 @@
 ﻿#-*- coding:utf-8 -*-
 from PIL import Image,ImageDraw,ImageFont
+import os # 
 
 def pic2Text(_file,_text):
 	img = Image.open(_file).convert("RGBA")
+	#print(img.format,img.size,img.mode)
 	w = 80 #宽度固定
 	h = int((float(img.size[1])/float(img.size[0]))*w) #高度按比例得出
 	fontSize = 25 #输出字体大小
@@ -10,7 +12,7 @@ def pic2Text(_file,_text):
 	src = img.convert('L') #转换成灰度图
 	minGrey = 255 #最小灰度
 	maxGrey = 0 #最大灰度
-	greyMap =  [[0 for col in range(h)] for row in range(w)] #灰度图 注意 w h
+	greyMap =  [[0]*h for row in range(w)] #灰度图 注意 w h
 	#此处循环求得灰度表以及最大最小灰度值
 	for i in range(w):
 		for j in range(h):
@@ -27,7 +29,7 @@ def pic2Text(_file,_text):
 	ft = ImageFont.truetype("msyhbd.ttf",fontSize) #注意字体支持中文
 	for j in range(h):
 		for i in range(w):
-			index = int((greyMap[i][j] - minGrey)//greyStep) #计算出改点使用哪个字符
+			index = int((greyMap[i][j] - minGrey)//greyStep)  #计算出改点使用哪个字符
 			if index >= len(_text):
 				index = len(_text) - 1  #注意结尾最大灰度值，防止越界
 			draw.text((i*fontSize,j*fontSize),_text[index], fill=img.getpixel((i,j)), font=ft) #汉字编码
@@ -35,5 +37,18 @@ def pic2Text(_file,_text):
 
 if __name__ == '__main__':
 	#textList = ['樊','启','迪','来','玩','逆','水','寒']
-	textList = ['0','1']
-	pic2Text('jie.jpg',textList)
+	textList = [
+		['0','1'],
+		['2','3'],
+		['我','爱','你']
+	]
+	
+	pathlist = os.walk('F:/study/python_study/love_gril')
+	for tuplelist in pathlist:
+		num = 0;
+		for i in tuplelist[2]:
+			pic2Text(tuplelist[0]+'/'+i,textList[num])
+			num = num + 1
+
+        	
+	
